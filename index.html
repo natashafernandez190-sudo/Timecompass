@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>TimeCompass | Interactive Cross-Border Time Zone Planner</title>
+    <meta name="description" content="Navigate global time zones instantly with TimeCompass. An elite day-to-night matrix time zone engine designed for remote teams and distributed networks.">
+    <meta name="keywords" content="timecompass, time compass, time zone converter, global meeting planner, remote team scheduler, time zone sync, working hours overlay">
+    <meta name="author" content="TimeCompass Matrix">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TimeCompass | Cross-Border Time Zone Planner">
+    <meta property="og:description" content="Stop calculating time zone offsets manually. Spin the TimeCompass dial to instantly visually align your remote team meeting windows.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1508962914676-134849a727f0?q=80&w=1200&auto=format&fit=crop">
+    <meta property="og:url" content="https://timecompass.xyz">
+
+    <style>
+        :root {
+            --bg-dark: #040712;
+            --bg-card: #0c1122;
+            --bg-input: rgba(6, 9, 20, 0.9);
+            --border-color: #1e293b;
+            --text-light: #f8fafc;
+            --text-muted: #64748b;
+            --accent-green: #00ff88;
+            --accent-neon: #00f0ff;
+            --accent-purple: #9d4edd;
+            --accent-gold: #ffb703;
+            
+            /* Sky Gradients */
+            --sky-night: linear-gradient(180deg, #02040a 0%, #0d122c 100%);
+            --sky-sunrise: linear-gradient(180deg, #180b30 0%, #e65c00 100%);
+            --sky-day: linear-gradient(180deg, #1d4ed8 0%, #3b82f6 100%);
+            --sky-sunset: linear-gradient(180deg, #9a2b06 0%, #310e62 100%);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-bottom: 40px;
+        }
+
+        /* LAYOUT GRID FOR ADVERTISEMENTS */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 10px;
+            gap: 15px;
+        }
+
+        @media (min-width: 1200px) {
+            .page-layout {
+                grid-template-columns: 160px 1fr 160px; /* Reserves space for left/right skyscraper ads */
+            }
+        }
+
+        /* SIDEBAR AD BANNER CONTAINERS */
+        .sidebar-ad-rail {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            padding-top: 20px;
+        }
+
+        @media (min-width: 1200px) {
+            .sidebar-ad-rail {
+                display: flex;
+            }
+        }
+
+        .ad-box-sticky {
+            position: sticky;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            text-align: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* APPLICATION WRAPPER (CONSTRAINED CENTRAL COLUMN) */
+        .app-wrapper {
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* COMPACT BRAND HEADER */
+        .main-header {
+            text-align: center;
+            padding: 15px 20px 5px 20px;
+            margin-bottom: 10px;
+        }
+        .main-header h1 {
+            font-size: 1.8rem;
+            margin: 0 0 4px 0;
+            background: linear-gradient(135deg, var(--accent-neon), #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -0.05em;
+        }
+        .main-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* MASTER CONTROL PANEL */
+        .control-panel {
+            position: relative;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: background 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 100;
+        }
+
+        .celestial-bg-wrap {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 11px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .celestial-body {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            left: 50%;
+            transform-origin: center 200px;
+            transition: transform 0.1s linear;
+            z-index: 1;
+        }
+
+        .celestial-sun {
+            background-color: #fffb00;
+            box-shadow: 0 0 20px #ff7b00, 0 0 40px #ffaa00;
+            top: 10px;
+        }
+
+        .celestial-moon {
+            background-color: #f1f5f9;
+            box-shadow: 0 0 15px rgba(255,255,255,0.4);
+            top: 10px;
+        }
+
+        .control-panel-content {
+            position: relative;
+            z-index: 5;
+        }
+
+        /* SLIDER BOX */
+        .slider-box {
+            background: rgba(2, 4, 8, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .slider-meta {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 900px) {
+            .slider-meta { grid-template-columns: 1fr auto auto; }
+        }
+
+        .manual-input, select, .search-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .manual-input:focus, select:focus, .search-input:focus { border-color: var(--accent-neon); }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            accent-color: var(--accent-neon);
+            cursor: pointer;
+            background: #1e293b;
+            border-radius: 5px;
+        }
+
+        /* WORKSPACE ROW */
+        .workspace-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 5;
+        }
+        @media (min-width: 768px) {
+            .workspace-row { grid-template-columns: 1fr auto; }
+        }
+
+        .search-engine-box { position: relative; }
+        .search-input { width: 100%; box-sizing: border-box; padding: 8px 12px; }
+
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%; 
+            left: 0; 
+            width: 100%;
+            background-color: #0b101d;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+            z-index: 99999 !important; 
+            display: none;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.95);
+        }
+
+        .suggestion-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .suggestion-item:hover { background-color: #162035; color: var(--accent-neon); }
+
+        .btn-add {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white; border: none; font-weight: bold;
+            padding: 8px 20px; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; transition: background 0.2s;
+        }
+        .btn-add:hover { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+
+        /* COLLAPSIBLE FIELD GUIDE */
+        .instruction-section {
+            background: #080c18;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .instruction-section summary {
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            cursor: pointer;
+            user-select: none;
+            outline: none;
+        }
+        .instruction-section summary:hover { color: var(--accent-neon); }
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding: 0 15px 15px 15px;
+            border-top: 1px solid rgba(255,255,255,0.02);
+        }
+        @media (min-width: 768px) {
+            .instruction-grid { grid-template-columns: 1fr 1fr 1fr; }
+        }
+        .step-card {
+            background: rgba(255,255,255,0.01);
+            border-left: 3px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+        }
+        .step-card h3 { font-size: 0.85rem; margin: 0 0 4px 0; }
+        .step-card p { font-size: 0.75rem; margin: 0; color: var(--text-muted); line-height: 1.3; }
+
+        /* TIME TRACK CONTAINER */
+        .zones-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            position: relative; 
+            z-index: 1; 
+        }
+
+        .zone-card {
+            position: relative;
+            border-radius: 10px;
+            padding: 12px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            transition: border-color 0.2s, background 0.2s ease;
+        }
+        .zone-card.master-active { border: 2px dashed var(--accent-neon); }
+        .zone-card.working-hours {
+            border: 1px solid var(--accent-green);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.05), inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .zone-info, .zone-time-display { z-index: 5; }
+        .zone-name { font-size: 1.1rem; font-weight: bold; }
+        .master-badge { font-size: 0.65rem; background: var(--accent-neon); color: #000; padding: 1px 4px; border-radius: 3px; font-weight: bold; margin-left: 6px; }
+
+        .city-tag-list { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+        .zone-offset { font-size: 0.7rem; color: #cbd5e1; margin-top: 4px; font-family: monospace; background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 3px; display: inline-block; }
+        .zone-clock { font-size: 1.5rem; font-weight: bold; font-family: monospace; text-align: right; }
+        .zone-status-badge { font-size: 0.7rem; text-transform: uppercase; font-weight: bold; margin-top: 3px; padding: 1px 6px; border-radius: 10px; background: rgba(0,0,0,0.4); display: inline-block; }
+
+        .action-row { margin-top: 6px; display: flex; gap: 6px; }
+        .btn-action {
+            padding: 2px 6px; font-size: 0.7rem; font-weight: bold;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 4px; cursor: pointer;
+        }
+        .btn-action:hover { border-color: var(--accent-neon); background: rgba(255,255,255,0.15); }
+        .btn-action.remove { color: #ef4444; background: rgba(239,68,68,0.1); }
+        .btn-action.remove:hover { background: #ef4444; color: white; }
+
+        .global-overlap-bar {
+            background-color: #0b101d; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; margin-top: 15px; text-align: center; font-size: 0.85rem; font-weight: bold; position: relative; z-index: 10;
+        }
+        .overlap-active { border-color: var(--accent-green); background: linear-gradient(135deg, #0b1d14 0%, #05100b 100%); color: var(--accent-green); }
+        .overlap-partial { border-color: var(--accent-gold); background: linear-gradient(135deg, #221a02 0%, #0c0901 100%); color: var(--accent-gold); }
+        .stars-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px); background-size: 140px 140px; opacity: 0; pointer-events: none; z-index: 1; }
+
+        /* SEO KNOWLEDGE BASE SECTION */
+        .seo-knowledge-base { margin-top: 40px; padding-top: 15px; }
+        .matrix-divider { border: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--border-color), transparent); margin-bottom: 30px; }
+        .seo-grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
+        @media (min-width: 850px) { .seo-grid { grid-template-columns: 1fr 1fr; } }
+        .seo-pillar h2 { font-size: 1.1rem; color: var(--text-light); margin-bottom: 15px; }
+        .use-case-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.04); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+        .use-case-item h4 { margin: 0 0 4px 0; color: var(--accent-neon); font-size: 0.9rem; }
+        .use-case-item p { margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+        
+        .faq-item { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
+        .faq-item summary { padding: 10px 12px; font-size: 0.85rem; font-weight: 600
