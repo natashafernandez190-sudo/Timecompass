@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <!-- PRIMARY SEO META TAGS -->
     <title>TimeCompass | Interactive Cross-Border Time Zone Planner</title>
     <meta name="description" content="Navigate global time zones instantly with TimeCompass. An elite day-to-night matrix time zone engine designed for remote teams and distributed networks.">
     <meta name="keywords" content="timecompass, time compass, time zone converter, global meeting planner, remote team scheduler, time zone sync, working hours overlay">
     <meta name="author" content="TimeCompass Matrix">
     <meta name="robots" content="index, follow">
 
+    <!-- OPEN GRAPH (SOCIAL MEDIA RICH CARD PREVIEWS) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="TimeCompass | Cross-Border Time Zone Planner">
     <meta property="og:description" content="Stop calculating time zone offsets manually. Spin the TimeCompass dial to instantly visually align your remote team meeting windows.">
@@ -45,7 +47,7 @@
             padding-bottom: 40px;
         }
 
-        /* LAYOUT GRID FOR ADVERTISEMENTS */
+        /* NEW LAYOUT GRID FOR ADVERTISEMENTS */
         .page-layout {
             display: grid;
             grid-template-columns: 1fr;
@@ -57,7 +59,7 @@
 
         @media (min-width: 1200px) {
             .page-layout {
-                grid-template-columns: 160px 1fr 160px; /* Reserves space for left/right skyscraper ads */
+                grid-template-columns: 160px 1fr 160px; /* Reserves 160px on left/right for skyscraper ads */
             }
         }
 
@@ -367,4 +369,402 @@
         .use-case-item p { margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
         
         .faq-item { background: rgba(255, 255, 255, 0.01); border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 10px; overflow: hidden; }
-        .faq-item summary { padding: 10px 12px; font-size: 0.85rem; font-weight: 600
+        .faq-item summary { padding: 10px 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--text-light); }
+        .faq-content { padding: 0 12px 12px 12px; background: #060913; }
+        .faq-content p { margin: 8px 0 0 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <!-- CORE AD AND APPLICATION WRAPPER LAYOUT -->
+    <div class="page-layout">
+        
+        <!-- LEFT ADVERTISING SLOT (Skyscraper) -->
+        <aside class="sidebar-ad-rail">
+            <div class="ad-box-sticky">
+                Advertisement<br>Placeholder<br>(160x600 Skyscraper)
+            </div>
+        </aside>
+
+        <!-- MAIN APPLICATION WRAPPER -->
+        <div class="app-wrapper">
+            <header class="main-header">
+                <h1>TIMECOMPASS</h1>
+                <p>Advanced cross-border time planning matrix for remote teams and global content networks.</p>
+            </header>
+
+            <main>
+                <!-- CONTROL BOX -->
+                <div class="control-panel" id="masterPanelContainer">
+                    <div class="celestial-bg-wrap">
+                        <div class="celestial-body celestial-sun" id="skySun"></div>
+                        <div class="celestial-body celestial-moon" id="skyMoon"></div>
+                    </div>
+                    
+                    <div class="control-panel-content">
+                        <div class="slider-box" id="sliderContainerBox">
+                            <div class="slider-meta">
+                                <span id="masterTitleDisplay" style="color:var(--accent-neon)">🧭 TimeCompass Control Axis</span>
+                                
+                                <div>
+                                    <label style="margin-right: 5px;">Set Master Hub:</label>
+                                    <div style="display:inline-block; position:relative;">
+                                        <input type="text" id="masterSearch" class="manual-input" style="width:180px;" placeholder="Search Master..." oninput="filterMasterSearch()" onfocus="focusMasterSearch()" autocomplete="off">
+                                        <div id="masterSuggestions" class="suggestions-dropdown" style="width:220px; right:0; left:auto;"></div>
+                                    </div>
+                                </div>
+                                
+                                <input type="time" id="manualTimeInput" class="manual-input" onchange="handleManualTimeInput(this.value)">
+                            </div>
+                            <input type="range" id="masterSlider" min="0" max="1439" value="720" oninput="syncFromSliderAxis()">
+                        </div>
+
+                        <div class="workspace-row" id="workspaceRowBox">
+                            <div class="search-engine-box">
+                                <input type="text" id="citySearch" class="search-input" placeholder="🔍 Add City or Country to map tracks (e.g., Sri Lanka, Japan, Dubai, UK)..." oninput="filterCitySearch()" onfocus="focusCitySearch()" autocomplete="off">
+                                <div id="suggestions" class="suggestions-dropdown"></div>
+                            </div>
+                            <button class="btn-add" onclick="triggerManualSelectedAdd()">Add Time Zone Track</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLLAPSIBLE OPERATIONS GUIDE -->
+                <details class="instruction-section" aria-label="User Guide">
+                    <summary>⚙️ View TimeCompass Matrix Guide (Click to Expand)</summary>
+                    <div class="instruction-grid">
+                        <div class="step-card">
+                            <h3>1. Calibrate Your Axis</h3>
+                            <p>Set your primary location as the <strong>Master Tracking Hub</strong>. Drag the slider to project hours seamlessly.</p>
+                        </div>
+                        <div class="step-card">
+                            <h3>2. Map Target Tracks</h3>
+                            <p>Search and include your teams below. Card backgrounds dynamically change based on day or night frames.</p>
+                        </div>
+                        <div class="step-card">
+                            <h3>3. Analyze Core Sync</h3>
+                            <p>The bottom status bar tracks exact target overlaps between standard business hours (<strong>8:00 AM - 6:00 PM</strong>).</p>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- DATA TRACKS -->
+                <section id="matrixOutputContainer" aria-label="Time Horizon Tracks">
+                    <div class="zones-container" id="zonesListContainer"></div>
+                    <div class="global-overlap-bar" id="globalMatchStatus">Compass Matrix Parsing...</div>
+                </section>
+
+                <!-- SEO ARTICLES -->
+                <section class="seo-knowledge-base" aria-label="Global Coordination Knowledge Base">
+                    <hr class="matrix-divider">
+                    <div class="seo-grid">
+                        <div class="seo-pillar">
+                            <h2>🎯 Core Synergy & Practical Use Cases</h2>
+                            <div class="use-case-item">
+                                <h4>Cross-Border Enterprise Alignment</h4>
+                                <p>Streamline corporate operations across distributed engineering nodes. Maximize sprint planning velocity by discovering clear overlapping milestones.</p>
+                            </div>
+                            <div class="use-case-item">
+                                <h4>Global Content Deployment Networks</h4>
+                                <p>Coordinate international media launches and channel video releases. Align multi-region publishing windows across target audience locations via TimeCompass metrics.</p>
+                            </div>
+                        </div>
+
+                        <div class="seo-pillar">
+                            <h2>❓ Frequently Asked Cross-Border Sync Questions</h2>
+                            <details class="faq-item" open>
+                                <summary>How do I coordinate a meeting with team members in London, Colombo, and New York?</summary>
+                                <div class="faq-content">
+                                    <p>Coordinating between London (GMT), Colombo (IST), and New York (EST) requires identifying a narrow intersection point. When New York starts its business morning at 9:00 AM EST, London is at 2:00 PM GMT, and Colombo is at 7:30 PM IST. TimeCompass lets you quickly lock this window.</p>
+                                </div>
+                            </details>
+                            <details class="faq-item">
+                                <summary>What are standard global business working hours?</summary>
+                                <div class="faq-content">
+                                    <p>Standard global business parameters typically map between 8:00 AM and 6:00 PM local time. This tool establishes strict tracking constraints centered around these optimal windows.</p>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- RIGHT ADVERTISING SLOT (Skyscraper) -->
+        <aside class="sidebar-ad-rail">
+            <div class="ad-box-sticky">
+                Advertisement<br>Placeholder<br>(160x600 Skyscraper)
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        const globalCityDatabase = [
+            { name: "London (GMT / United Kingdom)", offset: 0, cities: "London, Dublin, Edinburgh, Reykjavik, Lisbon, Casablanca" },
+            { name: "Paris / Berlin (CET / Western Europe)", offset: 1, cities: "Paris, Berlin, Rome, Madrid, Amsterdam, Brussels, Vienna, Warsaw, Prague" },
+            { name: "Athens / Cairo (EET / Eastern Europe)", offset: 2, cities: "Athens, Cairo, Helsinki, Istanbul, Kyiv, Bucharest, Johannesburg, Jerusalem" },
+            { name: "Moscow / Riyadh (MSK / East Africa)", offset: 3, cities: "Moscow, Riyadh, Nairobi, Baghdad, Addis Ababa, Doha, Kuwait City, Antananarivo" },
+            { name: "Dubai / Baku (GST / Gulf Time)", offset: 4, cities: "Dubai, Abu Dhabi, Muscat, Baku, Tbilisi, Yerevan, Samara" },
+            { name: "Karachi / Tashkent (PKT)", offset: 5, cities: "Karachi, Lahore, Tashkent, Islamabad, Ashgabat, Dushanbe, Yekaterinburg" },
+            { name: "Colombo / India (IST / Sri Lanka)", offset: 5.5, cities: "Colombo, New Delhi, Mumbai, Kolkata, Chennai, Bengaluru, Kathmandu" },
+            { name: "Dhaka / Almaty (BST)", offset: 6, cities: "Dhaka, Almaty, Astana, Thimphu, Omsk" },
+            { name: "Bangkok / Jakarta (ICT)", offset: 7, cities: "Bangkok, Jakarta, Hanoi, Phnom Penh, Vientiane, Novosibirsk" },
+            { name: "Singapore / Beijing (SGT)", offset: 8, cities: "Singapore, Beijing, Shanghai, Hong Kong, Taipei, Kuala Lumpur, Manila, Perth, Ulaanbaatar" },
+            { name: "Tokyo / Seoul (JST / Japan / Korea)", offset: 9, cities: "Tokyo, Osaka, Kyoto, Seoul, Pyongyang, Yakutsk" },
+            { name: "Sydney / Melbourne (AEST / Eastern Australia)", offset: 10, cities: "Sydney, Melbourne, Brisbane, Canberra, Vladivostok, Port Moresby" },
+            { name: "Solomon Islands / New Caledonia", offset: 11, cities: "Honiara, Noumea, Magadan, Sakhalin" },
+            { name: "Auckland / Fiji (NZST / New Zealand)", offset: 12, cities: "Auckland, Wellington, Suva, Anadyr" },
+            { name: "Cape Verde (CVT)", offset: -1, cities: "Praia, Ponta Delgada, Azores" },
+            { name: "Fernando de Noronha", offset: -2, cities: "Noronha, Grytviken" },
+            { name: "S_o Paulo / Buenos Aires (BRT / Brazil)", offset: -3, cities: "S_o Paulo, Rio de Janeiro, Buenos Aires, Brasilia, Montevideo" },
+            { name: "Santiago / Caracas (VET / Chile / Venezuela)", offset: -4, cities: "Santiago, Caracas, La Paz, Manaus, Asuncion, Halifax, Santo Domingo" },
+            { name: "New York / Toronto (EST / USA / Canada)", offset: -5, cities: "New York, Toronto, Miami, Washington DC, Boston, Atlanta, Havana, Bogota, Lima" },
+            { name: "Chicago / Mexico City (CST / Central Region)", offset: -6, cities: "Chicago, Houston, Dallas, Minneapolis, Mexico City, Winnipeg, Guatemala City" },
+            { name: "Denver / Phoenix (MST / Mountain Region)", offset: -7, cities: "Denver, Phoenix, Salt Lake City, Calgary, Edmonton, Chihuahua" },
+            { name: "Los Angeles / Vancouver (PST / Pacific Coast)", offset: -8, cities: "Los Angeles, San Francisco, Seattle, Las Vegas, Vancouver, Tijuana" },
+            { name: "Anchorage (AKST / Alaska)", offset: -9, cities: "Anchorage, Fairbanks, Juneau, Nome" },
+            { name: "Honolulu (HST / Hawaii)", offset: -10, cities: "Honolulu, Kailua, Papeete, Cook Islands" },
+            { name: "Midway / American Samoa", offset: -11, cities: "Pago Pago, Midway Atoll, Niue" }
+        ];
+
+        let activeTracks = [
+            { id: "1", name: "Colombo / India (IST / Sri Lanka)", offset: 5.5, cities: "Colombo, New Delhi, Mumbai, Kolkata, Chennai" },
+            { id: "2", name: "London (GMT / United Kingdom)", offset: 0, cities: "London, Dublin, Edinburgh, Reykjavik" },
+            { id: "3", name: "New York / Toronto (EST / USA / Canada)", offset: -5, cities: "New York, Toronto, Miami, Washington DC" }
+        ];
+        
+        let currentMasterZone = { name: "London (GMT / United Kingdom)", offset: 0, cities: "London, Dublin, Edinburgh, Reykjavik, Lisbon, Casablanca" };
+        let currentMasterMinutes = 720;
+        let pendingSelectedTrack = null;
+
+        function focusMasterSearch() { document.getElementById('masterSuggestions').style.display = "none"; }
+        function focusCitySearch() { document.getElementById('suggestions').style.display = "none"; }
+
+        function syncFromSliderAxis() {
+            currentMasterMinutes = parseInt(document.getElementById('masterSlider').value);
+            updateGlobalTimelineSync();
+        }
+
+        function handleManualTimeInput(val) {
+            if(!val) return;
+            const pieces = val.split(":");
+            currentMasterMinutes = (parseInt(pieces[0]) * 60) + parseInt(pieces[1]);
+            document.getElementById('masterSlider').value = currentMasterMinutes;
+            updateGlobalTimelineSync();
+        }
+
+        function filterMasterSearch() {
+            const query = document.getElementById('masterSearch').value.toLowerCase();
+            const box = document.getElementById('masterSuggestions');
+            if(!query) { box.style.display = "none"; return; }
+            
+            const matches = globalCityDatabase.filter(c => c.name.toLowerCase().includes(query) || c.cities.toLowerCase().includes(query));
+            if(matches.length === 0) { box.style.display = "none"; return; }
+
+            box.innerHTML = "";
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.className = "suggestion-item";
+                div.innerText = `${match.name.split(" (")[0]} [UTC ${match.offset >= 0 ? '+' : ''}${match.offset}]`;
+                div.onclick = () => {
+                    const oldOffset = currentMasterZone.offset;
+                    const newOffset = match.offset;
+                    let absoluteBaseMinutes = currentMasterMinutes - (oldOffset * 60);
+                    let targetLocalMinutes = absoluteBaseMinutes + (newOffset * 60);
+                    while(targetLocalMinutes < 0) targetLocalMinutes += 1440;
+                    currentMasterMinutes = targetLocalMinutes % 1440;
+                    document.getElementById('masterSlider').value = currentMasterMinutes;
+                    currentMasterZone = match;
+                    document.getElementById('masterSearch').value = match.name.split(" (")[0];
+                    box.style.display = "none";
+                    buildHTMLStructure();
+                };
+                box.appendChild(div);
+            });
+            box.style.display = "block";
+        }
+
+        function filterCitySearch() {
+            const query = document.getElementById('citySearch').value.toLowerCase();
+            const box = document.getElementById('suggestions');
+            if(!query) { box.style.display = "none"; return; }
+            
+            const matches = globalCityDatabase.filter(c => c.name.toLowerCase().includes(query) || c.cities.toLowerCase().includes(query));
+            if(matches.length === 0) { box.style.display = "none"; return; }
+
+            box.innerHTML = "";
+            matches.forEach(match => {
+                const div = document.createElement('div');
+                div.className = "suggestion-item";
+                div.innerText = `${match.name} [UTC ${match.offset >= 0 ? '+' : ''}${match.offset}]`;
+                div.onclick = () => {
+                    document.getElementById('citySearch').value = match.name;
+                    pendingSelectedTrack = match;
+                    box.style.display = "none";
+                };
+                box.appendChild(div);
+            });
+            box.style.display = "block";
+        }
+
+        function triggerManualSelectedAdd() {
+            const textVal = document.getElementById('citySearch').value;
+            if(!textVal) return;
+            let trackToAdd = pendingSelectedTrack || globalCityDatabase.find(c => c.name === textVal || c.name.includes(textVal));
+            if(trackToAdd) {
+                activeTracks.push({ id: "t_" + Date.now(), name: trackToAdd.name, offset: trackToAdd.offset, cities: trackToAdd.cities });
+                document.getElementById('citySearch').value = "";
+                pendingSelectedTrack = null;
+                buildHTMLStructure();
+            }
+        }
+
+        function syncSliderToThisCardOffset(trackName, trackOffset) {
+            const oldOffset = currentMasterZone.offset;
+            const newOffset = parseFloat(trackOffset);
+            let absoluteBaseMinutes = currentMasterMinutes - (oldOffset * 60);
+            let targetLocalMinutes = absoluteBaseMinutes + (newOffset * 60);
+            while(targetLocalMinutes < 0) targetLocalMinutes += 1440;
+            currentMasterMinutes = targetLocalMinutes % 1440;
+            document.getElementById('masterSlider').value = currentMasterMinutes;
+            updateGlobalTimelineSync();
+        }
+
+        function removeTrackNode(id) {
+            if(activeTracks.length <= 1) return;
+            activeTracks = activeTracks.filter(t => t.id !== id);
+            buildHTMLStructure();
+        }
+
+        function updateCelestialStageGraphic(hours) {
+            const stage = document.getElementById('masterPanelContainer');
+            const sun = document.getElementById('skySun');
+            const moon = document.getElementById('skyMoon');
+            const dayRatio = (hours * 60) / 1440;
+            const angle = (dayRatio * 360) - 90; 
+
+            if(sun && moon) {
+                sun.style.transform = `rotate(${angle}deg) translate(0, -90px) rotate(-${angle}deg)`;
+                moon.style.transform = `rotate(${angle + 180}deg) translate(0, -90px) rotate(-${angle + 180}deg)`;
+            }
+
+            if (hours >= 6 && hours < 8) stage.style.background = "var(--sky-sunrise)";
+            else if (hours >= 8 && hours < 18) stage.style.background = "var(--sky-day)";
+            else if (hours >= 18 && hours < 20) stage.style.background = "var(--sky-sunset)";
+            else stage.style.background = "var(--sky-night)";
+        }
+
+        function buildHTMLStructure() {
+            const container = document.getElementById('zonesListContainer');
+            container.innerHTML = "";
+
+            activeTracks.forEach((track) => {
+                const isCurrentlyMasterZone = (track.name === currentMasterZone.name);
+                const card = document.createElement('div');
+                card.id = `card_${track.id}`;
+                card.className = `zone-card ${isCurrentlyMasterZone ? 'master-active' : ''}`;
+                
+                card.innerHTML = `
+                    <div class="stars-bg"></div>
+                    <div class="zone-info">
+                        <div class="zone-name">${track.name.split(" (")[0]} ${isCurrentlyMasterZone ? '<span class="master-badge">MASTER</span>' : ''}</div>
+                        <div class="city-tag-list">📍 ${track.cities.substring(0, 60)}...</div>
+                        <div class="zone-offset">UTC ${track.offset >= 0 ? '+' : ''}${track.offset}</div>
+                        <div class="action-row">
+                            <button class="btn-action" onclick="syncSliderToThisCardOffset('${track.name.replace(/'/g, "\\'")}', ${track.offset})">🧭 Sync Slider</button>
+                            <button class="btn-action remove" onclick="removeTrackNode('${track.id}')">Delete</button>
+                        </div>
+                    </div>
+                    <div class="zone-time-display">
+                        <div class="zone-clock" id="clock_${track.id}">--:-- AM</div>
+                        <div class="zone-status-badge" id="status_${track.id}">Loading...</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            updateGlobalTimelineSync();
+        }
+
+        function updateGlobalTimelineSync() {
+            document.getElementById('masterTitleDisplay').innerText = `🧭 TimeCompass Axis: ${currentMasterZone.name.split(" (")[0]}`;
+            const absoluteBaseMinutes = currentMasterMinutes - (currentMasterZone.offset * 60);
+            let totalEvaluatedZones = activeTracks.length;
+            let totalMatchingWorkingZones = 0;
+
+            let masterZoneInList = activeTracks.some(t => t.name === currentMasterZone.name);
+            if (!masterZoneInList) totalEvaluatedZones += 1;
+
+            let masterLocalMinutes = absoluteBaseMinutes + (currentMasterZone.offset * 60);
+            while(masterLocalMinutes < 0) masterLocalMinutes += 1440;
+            masterLocalMinutes = masterLocalMinutes % 1440;
+            const mHours = Math.floor(masterLocalMinutes / 60);
+            const mMinFraction = Math.floor(masterLocalMinutes % 60);
+            
+            updateCelestialStageGraphic(mHours + (mMinFraction / 60));
+            document.getElementById('manualTimeInput').value = `${mHours.toString().padStart(2,'0')}:${mMinFraction.toString().padStart(2,'0')}`;
+
+            if (mHours >= 8 && mHours < 18) totalMatchingWorkingZones += 1;
+
+            activeTracks.forEach((track) => {
+                const cardEl = document.getElementById(`card_${track.id}`);
+                const clockEl = document.getElementById(`clock_${track.id}`);
+                const statusEl = document.getElementById(`status_${track.id}`);
+                const starEl = cardEl ? cardEl.querySelector('.stars-bg') : null;
+
+                if (!cardEl || !clockEl || !statusEl) return;
+
+                let localMinutes = absoluteBaseMinutes + (track.offset * 60);
+                while(localMinutes < 0) localMinutes += 1440;
+                localMinutes = localMinutes % 1440;
+
+                const localHours = Math.floor(localMinutes / 60);
+                const localMinFraction = Math.floor(localMinutes % 60);
+
+                let bgGrad = "", statusText = "", statusColor = "", starOpacity = "0";
+                if (localHours >= 6 && localHours < 8) { bgGrad = "var(--sky-sunrise)"; statusText = "🌅 Sunrise"; statusColor = "var(--accent-gold)"; }
+                else if (localHours >= 8 && localHours < 18) { bgGrad = "var(--sky-day)"; statusText = "☀️ Work Hours"; statusColor = "var(--accent-green)"; }
+                else if (localHours >= 18 && localHours < 20) { bgGrad = "var(--sky-sunset)"; statusText = "🌇 Sunset"; statusColor = "#f72585"; }
+                else { bgGrad = "var(--sky-night)"; statusText = "🌙 Night Rest"; statusColor = "#718096"; starOpacity = "0.45"; }
+
+                const insideWorkingWindow = (localHours >= 8 && localHours < 18);
+                if (insideWorkingWindow && track.name !== currentMasterZone.name) totalMatchingWorkingZones += 1;
+
+                cardEl.style.background = bgGrad;
+                if (insideWorkingWindow) cardEl.classList.add('working-hours');
+                else cardEl.classList.remove('working-hours');
+
+                if (starEl) starEl.style.opacity = starOpacity;
+
+                const displayHours = localHours % 12 === 0 ? 12 : localHours % 12;
+                const ampm = localHours >= 12 ? 'PM' : 'AM';
+                
+                clockEl.innerText = `${displayHours}:${localMinFraction.toString().padStart(2,'0')} ${ampm}`;
+                statusEl.innerText = statusText;
+                statusEl.style.color = statusColor;
+            });
+
+            const statusBox = document.getElementById('globalMatchStatus');
+            if (totalMatchingWorkingZones === totalEvaluatedZones) {
+                statusBox.innerText = `🟢 PERFECT SYNC: All ${totalMatchingWorkingZones} / ${totalEvaluatedZones} zones are in Working Hours.`;
+                statusBox.className = "global-overlap-bar overlap-active";
+            } else if (totalMatchingWorkingZones > 0) {
+                statusBox.innerText = `⚠️ SYNC MATRIX SPLIT: Only ${totalMatchingWorkingZones} / ${totalEvaluatedZones} zones align.`;
+                statusBox.className = "global-overlap-bar overlap-partial";
+            } else {
+                statusBox.innerText = `❌ DESYNC ALARM: 0 out of ${totalEvaluatedZones} locations are inside working windows.`;
+                statusBox.className = "global-overlap-bar";
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            if(!e.target.classList.contains('manual-input') && !e.target.classList.contains('search-input')) {
+                document.getElementById('suggestions').style.display = "none";
+                document.getElementById('masterSuggestions').style.display = "none";
+            }
+        });
+
+        buildHTMLStructure();
+    </script>
+</body>
+</html>
